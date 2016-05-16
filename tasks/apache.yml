@@ -1,0 +1,5 @@
+    - name: install apache
+      apt: name={{ item }} state=present
+      with_items:
+        - apache2
+        - libapache2-mod-php5

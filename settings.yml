@@ -1,0 +1,15 @@
+---
+ip_address: 192.168.33.66
+site_path: /var/www/html/
+site_url: test.dev
+
+database_name: wordpress
+database_username: user_wp
+database_password: wordpress
+database_table_prefix: _3da923
+
+wp_site_title: Client
+wp_admin_username: knoxweb
+wp_admin_password: Osmosis.123
+wp_admin_email: admin@knoxweb.com
+

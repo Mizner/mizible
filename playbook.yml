@@ -1,0 +1,17 @@
+---
+- hosts: all
+  sudo: true
+  tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+    - include: tasks/apache.yml
+    - include: tasks/mysql.yml
+    - include: tasks/php.yml
+    - include: tasks/wp-cli.yml
+    # Finish it off with a Apache Restart
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+    - name: restart php5-fpm
+      service: name=php5-fpm state=restarted

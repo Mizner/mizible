@@ -1,0 +1,64 @@
+    - name: Install MySQL client, server and related libraries
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - mysql-client
+        - mysql-server
+        - python-mysqldb
+        
+    - name: Start MySQL service
+      service:
+        name: "mysql"
+        state: started
+        enabled: yes
+
+    - name: Setup MySQL root password
+      mysql_user:
+        name: "root"
+        password: "4a8vnal3"
+        host: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ ansible_hostname }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
+
+    - name: Setup MySQL creds for root user
+      template:
+        src: "{{ mysqlTemplatePath }}"
+        dest: "/root/.my.cnf"
+        owner: "root"
+        mode: 0600
+
+    - name: Delete blank MySQL users
+      mysql_user:
+        name: ""
+        host: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ ansible_hostname }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
+
+    - name: Drop MySQL test database
+      mysql_db: 
+        name: test
+        state: absent
+
+    # - name: Setup empty database for WordPress
+    #   mysql_db:
+    #     name: "{{database_name}}"
+    #     encoding: "utf8"
+    #     collation: "utf8_unicode_ci"
+    #     state: "present"
+    #     login_user: "{{database_username}}"
+    #     login_password: "{{database_password}}"
+
+    - name: Setup MySQL user for WordPress
+      mysql_user:
+        name: "{{database_username}}"
+        password: "{{database_password}}"
+        host: "localhost"
+        priv: "wordpress.*:ALL"
+        state: "present"
